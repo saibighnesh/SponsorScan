@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--success-fg);"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><path d="M11 8v6M8 11h6"></path></svg>
+        <h1>SponsorScan</h1>
+      </div>
+      <div class="header-right">
+        <button id="theme-toggle" class="icon-btn" title="Toggle Theme">
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+        <button id="copy-btn" class="icon-btn" title="Copy Results">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+        <button id="rescan-btn" class="icon-btn" title="Rescan Page">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+        </button>
+      </div>
+    </header>
+    
+    <div id="loading" class="hidden loading-container">
+      <div class="spinner"></div>
+      <p>Scanning job posting...</p>
+    </div>
+
+    <div id="results">
+      <div id="status-card" class="status-card">
+        <div class="status-header">
+          <div id="status-icon" class="info"></div>
+          <h2 id="status-title">Scanning...</h2>
+        </div>
+        <p id="summary-text" class="summary"></p>
+        <p id="country-info">📍 <span id="country-name">-</span></p>
+      </div>
+      
+      <div id="matches-container">
+        <div id="signals-header" class="signals-header hidden">
+          <h2>Detected Signals</h2>
+          <button id="highlight-btn" class="action-btn" disabled>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            Highlight on Page
+          </button>
+        </div>
+        <div id="positive-section" class="match-section hidden">
+          <h3><span style="color: var(--success-fg)">●</span> Positive Signals</h3>
+          <ul id="positive-matches" class="match-list"></ul>
+        </div>
+        
+        <div id="negative-section" class="match-section hidden">
+          <h3><span style="color: var(--danger-fg)">●</span> Negative Signals</h3>
+          <ul id="negative-matches" class="match-list"></ul>
+        </div>
+        
+        <div id="ambiguous-section" class="match-section hidden">
+          <h3><span style="color: var(--warning-fg)">●</span> Ambiguous Signals</h3>
+          <ul id="ambiguous-matches" class="match-list"></ul>
+        </div>
+        
+        <div id="empty-hint" class="empty-hint hidden">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <p>No visa sponsorship language was detected on this page. Try opening a job posting on LinkedIn or Indeed.</p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="copy-toast" class="toast hidden">Copied to clipboard!</div>
+  </div>
+  <script src="detector.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
