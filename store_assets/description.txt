@@ -1,19 +1,31 @@
-SponsorScan
+SponsorScan v2.0
 
 Stop guessing and start applying! SponsorScan instantly scans job postings across LinkedIn, Indeed, Glassdoor, and other major job boards to tell you if a company is willing to sponsor your work visa.
 
 Whether you're looking for an H-1B in the US, a Skilled Worker Visa in the UK, a Blue Card in Germany, or an LMIA in Canada, this tool highlights the exact phrases that indicate whether a job is open to international candidates or restricted to local citizens.
 
 🚀 Key Features:
+• 350+ Signal Phrases: Detects sponsorship-related language in 9 languages across 20+ countries.
 • Instant Detection: Click the extension icon on any job posting to immediately see its visa sponsorship status (Positive, Negative, or Unclear).
+• Selection Scanning: Select specific text on a page and scan just that portion for targeted analysis.
+• False Positive Protection: 50+ exclusion phrases prevent false matches — "security check" won't be confused with "security clearance required".
+• Citizenship & Clearance Detection: Detects US citizenship requirements, security clearances, ITAR/export control, and federal employment restrictions.
 • Highlight on Page: With one click, highlight the exact phrases in the job description (Green for positive, Red for negative, Yellow for ambiguous) so you can read the context yourself.
-• Multi-Language Support: Detects phrases in English, German, French, and Dutch.
+• Multi-Language Support: Detects phrases in English, German, French, Dutch, Spanish, Portuguese, Japanese, Korean, and Arabic.
+• CJK Language Support: Japanese, Korean, and Chinese characters correctly matched using advanced detection.
 • Smart Contextual Analysis: Uses an advanced engine to prevent false positives (e.g., understanding that "no visa sponsorship" is a negative signal, not a positive one).
 • Global Country Detection: Automatically detects which country the job is located in based on currencies, cities, and local visa names (e.g., £, €, Tier 2, TSS).
+• Dark / Light Theme: Choose your preferred view with a single click.
+• SPA Support: Works on modern single-page applications with Shadow DOM traversal.
 
 🌍 Perfect for:
 • International students looking for post-graduation opportunities (OPT/STEM OPT).
 • Expats seeking to relocate to the US, UK, Canada, Australia, EU, and beyond.
 • Tech workers looking for global opportunities.
+• Anyone applying to government/defense roles requiring citizenship or clearance.
+
+🔒 Privacy:
+• 100% client-side — no data ever leaves your browser.
+• No signup, no tracking, no analytics.
 
 Don't waste time applying for roles that won't sponsor. Install SponsorScan today and focus your job search on companies that want to hire YOU.

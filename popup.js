@@ -72,22 +72,24 @@ async function runScan() {
     const [{ result }] = await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: () => {
+        // First check if user has selected text
+        const selection = window.getSelection().toString().trim();
+        if (selection.length > 0) {
+          return { text: selection, type: 'selection' };
+        }
+
         // A more aggressive text extraction function that tries to get all visible text
         function extractText(element) {
           let text = '';
           if (element.nodeType === Node.TEXT_NODE) {
             text += element.textContent + ' ';
           } else if (element.nodeType === Node.ELEMENT_NODE) {
-            // We removed the 'display: none' check to aggressively scrape SPAs
             if (element.tagName === 'SCRIPT' || element.tagName === 'STYLE' || element.tagName === 'NOSCRIPT') {
               return '';
             }
-            
-            // Check shadow DOM
             if (element.shadowRoot) {
                text += extractText(element.shadowRoot);
             }
-            
             for (let child of element.childNodes) {
               text += extractText(child);
             }
@@ -95,16 +97,22 @@ async function runScan() {
           return text;
         }
         
-        // Fallback to document.body.innerText if the aggressive method yields too little
         const aggressiveText = extractText(document.body);
         const standardText = document.body.innerText || "";
         
-        return aggressiveText.length > standardText.length ? aggressiveText : standardText;
+        return {
+          text: aggressiveText.length > standardText.length ? aggressiveText : standardText,
+          type: 'page'
+        };
       }
     });
 
-    currentAnalysis = detector.detect(result, tab.url);
+    currentAnalysis = detector.detect(result.text, tab.url);
     activeTabId = tab.id;
+    // Add a small note if they scanned a selection
+    if (result.type === 'selection') {
+      currentAnalysis.summary = "(Scanned Selected Text) " + currentAnalysis.summary;
+    }
     showResults(currentAnalysis);
   } catch (error) {
     console.error('Detection failed:', error);

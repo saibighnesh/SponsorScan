@@ -8,8 +8,9 @@
 </p>
 
 <p align="center">
+  <img src="https://img.shields.io/badge/Version-2.0-brightgreen?style=flat-square" alt="Version 2.0">
   <img src="https://img.shields.io/badge/Manifest-V3-blue?style=flat-square" alt="Manifest V3">
-  <img src="https://img.shields.io/badge/Signals-290+-green?style=flat-square" alt="290+ Signals">
+  <img src="https://img.shields.io/badge/Signals-350+-green?style=flat-square" alt="350+ Signals">
   <img src="https://img.shields.io/badge/Languages-9-orange?style=flat-square" alt="9 Languages">
   <img src="https://img.shields.io/badge/Countries-20+-purple?style=flat-square" alt="20+ Countries">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License">
@@ -29,17 +30,19 @@ Millions of international job seekers spend hours reading through job postings t
 
 ### The Solution
 
-SponsorScan uses a **290+ phrase detection engine** with smart negation analysis and false positive protection to scan every word on the page and give you a clear, color-coded answer.
+SponsorScan uses a **350+ phrase detection engine** with smart negation analysis, false positive protection, and CJK language support to scan every word on the page and give you a clear, color-coded answer.
 
 ---
 
 ## ✨ Features
 
 ### Core Detection Engine
-- **290+ signal phrases** covering positive, negative, and ambiguous sponsorship language
+- **350+ signal phrases** covering positive, negative, and ambiguous sponsorship language
 - **Smart negation detection** — catches phrases like *"we do **not** offer visa sponsorship"* even when the word "not" is 6+ words away from "sponsorship"
 - **False positive protection** — 50+ exclusion phrases prevent false matches (e.g., "security check" ≠ "security clearance required", "event sponsor" ≠ "visa sponsor")
+- **CJK language support** — Japanese, Korean, and Chinese phrases correctly matched without `\b` word boundaries
 - **Country detection** — automatically identifies the job's country from city names, currencies, and URL patterns across 20+ countries
+- **Citizenship & clearance detection** — catches "US citizen", "top secret security clearance", ITAR, export control, and government-only phrases
 
 ### Multi-Language Support (9 Languages)
 | Language | Positive Example | Negative Example |
@@ -57,7 +60,7 @@ SponsorScan uses a **290+ phrase detection engine** with smart negation analysis
 ### Regional Coverage
 | Region | Positive Signals | Negative Signals |
 |--------|-----------------|-----------------|
-| 🇺🇸 United States | H-1B, EB-2/3, green card, OPT/CPT, PERM | "must be authorized without sponsorship" |
+| 🇺🇸 United States | H-1B, EB-2/3, green card, OPT/CPT, PERM | "US citizen", ITAR, export control, clearance |
 | 🇬🇧 United Kingdom | Skilled Worker Visa, CoS, sponsor licence | "we are not a licensed sponsor" |
 | 🇦🇺 Australia | 482/494/457 sponsorship, DAMA | "must have Australian work rights" |
 | 🇨🇦 Canada | LMIA, PGWP, Global Talent Stream | "Canadian citizens and PRs only" |
@@ -70,6 +73,7 @@ SponsorScan uses a **290+ phrase detection engine** with smart negation analysis
 - 📋 **Copy results** to clipboard with one click
 - 🔄 **Rescan** button for quick re-analysis
 - 🎯 **Highlight signals** directly on the job page with scroll-to-first
+- ✂️ **Selection scanning** — select text on a page and scan just that portion
 - 🕸️ **SPA support** — aggressive text extraction with Shadow DOM traversal
 - ⚡ **Instant results** — scans in under 100ms
 
@@ -116,6 +120,8 @@ SponsorScan uses a **290+ phrase detection engine** with smart negation analysis
 | 🟡 **Mixed** | Both positive and negative signals found |
 | ⚪ **No Info** | No sponsorship language detected |
 
+> 💡 **Pro tip:** Select specific text on the page before clicking SponsorScan to scan just that portion.
+
 ---
 
 ## 🏗️ Architecture
@@ -123,9 +129,11 @@ SponsorScan uses a **290+ phrase detection engine** with smart negation analysis
 ```
 sponsorscan/
 ├── manifest.json        # Chrome Extension manifest (MV3)
-├── detector.js          # Core detection engine (290+ signals)
+├── detector.js          # Core detection engine (350+ signals)
 ├── popup.html           # Extension popup UI
 ├── popup.js             # Popup logic, theme, copy, rescan
+├── content.js           # Content script for page integration
+├── content.css          # On-page highlight styles
 ├── styles.css           # Dark/light theme CSS variables
 ├── test.js              # Automated test suite
 ├── icons/
@@ -143,23 +151,29 @@ sponsorscan/
 ### How Detection Works
 
 ```
-Page Text → Normalize → Mask Negatives → Mask False Positives
-                                              ↓
-                              Detect Positives (with CJK support)
-                                              ↓
-                              Check Implicit Negation (6-word window)
-                                              ↓
-                              Detect Ambiguous Signals
-                                              ↓
-                              Detect Country (cities, currencies, URLs)
-                                              ↓
-                              Generate Status + Summary
+Page Text / Selected Text
+         ↓
+    Normalize (lowercase, collapse whitespace)
+         ↓
+    Mask Explicit Negative Phrases
+         ↓
+    Mask False Positive Contexts (50+ exclusions)
+         ↓
+    Detect Positive Signals (with CJK support)
+         ↓
+    Check Implicit Negation (6-word window)
+         ↓
+    Detect Ambiguous Signals
+         ↓
+    Detect Country (cities, currencies, URLs)
+         ↓
+    Generate Status + Summary
 ```
 
 1. **Normalize** — Collapse whitespace and lowercase
 2. **Mask negatives** — Remove explicit negative phrases so they don't trigger positive matches
-3. **Mask false positives** — Remove non-immigration phrases (e.g., "event sponsor", "security check")
-4. **Detect positives** — Match remaining text against 140+ positive signals
+3. **Mask false positives** — Remove non-immigration phrases (e.g., "event sponsor", "security check", "drug testing")
+4. **Detect positives** — Match remaining text against 150+ positive signals (CJK-aware)
 5. **Implicit negation** — Check if matched positive signals have "no", "not", "without" up to 6 words before them
 6. **Ambiguous signals** — Detect phrases like "relocation" or "right to work" that could go either way
 7. **Country detection** — Identify the job's country from city names, currency symbols, and URL patterns
@@ -181,7 +195,27 @@ The test suite covers:
 - ✅ Multi-language detection (German, French, Japanese, Korean, etc.)
 - ✅ Country detection from cities, currencies, and URLs
 - ✅ False positive protection (security checks, EEO language, event sponsors, etc.)
+- ✅ Citizenship and security clearance detection
 - ✅ SPA and Shadow DOM text extraction
+
+---
+
+## 📋 Changelog
+
+### v2.0 (March 2026)
+- **350+ signals** (up from 165) — added 185+ new phrases
+- **9 languages** — added Spanish, Portuguese, Japanese, Korean, and Arabic
+- **False positive protection** — 50+ exclusion phrases prevent "security check", "event sponsor", "office relocation" from triggering false matches
+- **CJK support** — Japanese, Korean, and Chinese characters now correctly matched
+- **Citizenship & clearance** — "US citizen", "top secret security clearance", ITAR, export control, federal/DoD phrases
+- **Selection scanning** — select text on a page and scan just that portion
+- **Content scripts** — on-page integration for richer scanning
+- **SPA support** — aggressive text extraction with Shadow DOM traversal
+
+### v1.0 (March 2026)
+- Initial release with 165 signals in 4 languages
+- Dark/light theme, copy results, rescan, highlight on page
+- 20+ country detection
 
 ---
 
